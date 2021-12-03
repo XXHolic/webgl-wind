@@ -26,7 +26,7 @@ gui.add(wind, 'dropRate', 0, 0.1);
 gui.add(wind, 'dropRateBump', 0, 0.2);
 
 const windFiles = {
-  0: "2021130000",
+  0: "2021113000",
   6: "2021113006",
   12: "2021113012",
 };
@@ -99,3 +99,4 @@ function getJSON(url, callback) {
     };
     xhr.send();
 }
+https://xxholic.github.io/webgl-wind/
