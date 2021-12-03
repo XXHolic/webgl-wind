@@ -32,7 +32,7 @@ const windFiles = {
 };
 
 const meta = {
-  "2016-11-20+h": 0,
+  "2021-11-30+h": 0,
   "retina resolution": true,
   "github.com/mapbox/webgl-wind": function () {
     window.location = "https://github.com/XXHolic/webgl-wind";
@@ -40,63 +40,66 @@ const meta = {
 };
 gui.add(meta, "2021-11-30+h", 0, 12, 6).onFinishChange(updateWind);
 if (pxRatio !== 1) {
-    gui.add(meta, 'retina resolution').onFinishChange(updateRetina);
+  gui.add(meta, "retina resolution").onFinishChange(updateRetina);
 }
-gui.add(meta, 'github.com/mapbox/webgl-wind');
+gui.add(meta, "github.com/mapbox/webgl-wind");
 updateWind(0);
 updateRetina();
 
 function updateRetina() {
-    const ratio = meta['retina resolution'] ? pxRatio : 1;
-    canvas.width = canvas.clientWidth * ratio;
-    canvas.height = canvas.clientHeight * ratio;
-    wind.resize();
+  const ratio = meta["retina resolution"] ? pxRatio : 1;
+  canvas.width = canvas.clientWidth * ratio;
+  canvas.height = canvas.clientHeight * ratio;
+  wind.resize();
 }
 
-getJSON('https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_110m_coastline.geojson', function (data) {
-    const canvas = document.getElementById('coastline');
+getJSON(
+  "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_110m_coastline.geojson",
+  function (data) {
+    const canvas = document.getElementById("coastline");
     canvas.width = canvas.clientWidth * pxRatio;
     canvas.height = canvas.clientHeight * pxRatio;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     ctx.lineWidth = pxRatio;
-    ctx.lineJoin = ctx.lineCap = 'round';
-    ctx.strokeStyle = 'white';
+    ctx.lineJoin = ctx.lineCap = "round";
+    ctx.strokeStyle = "white";
     ctx.beginPath();
 
     for (let i = 0; i < data.features.length; i++) {
-        const line = data.features[i].geometry.coordinates;
-        for (let j = 0; j < line.length; j++) {
-            ctx[j ? 'lineTo' : 'moveTo'](
-                (line[j][0] + 180) * canvas.width / 360,
-                (-line[j][1] + 90) * canvas.height / 180);
-        }
+      const line = data.features[i].geometry.coordinates;
+      for (let j = 0; j < line.length; j++) {
+        ctx[j ? "lineTo" : "moveTo"](
+          ((line[j][0] + 180) * canvas.width) / 360,
+          ((-line[j][1] + 90) * canvas.height) / 180
+        );
+      }
     }
     ctx.stroke();
-});
+  }
+);
 
 function updateWind(name) {
-    getJSON('wind/' + windFiles[name] + '.json', function (windData) {
-        const windImage = new Image();
-        windData.image = windImage;
-        windImage.src = 'wind/' + windFiles[name] + '.png';
-        windImage.onload = function () {
-            wind.setWind(windData);
-        };
-    });
+  getJSON("wind/" + windFiles[name] + ".json", function (windData) {
+    const windImage = new Image();
+    windData.image = windImage;
+    windImage.src = "wind/" + windFiles[name] + ".png";
+    windImage.onload = function () {
+      wind.setWind(windData);
+    };
+  });
 }
 
 function getJSON(url, callback) {
-    const xhr = new XMLHttpRequest();
-    xhr.responseType = 'json';
-    xhr.open('get', url, true);
-    xhr.onload = function () {
-        if (xhr.status >= 200 && xhr.status < 300) {
-            callback(xhr.response);
-        } else {
-            throw new Error(xhr.statusText);
-        }
-    };
-    xhr.send();
+  const xhr = new XMLHttpRequest();
+  xhr.responseType = "json";
+  xhr.open("get", url, true);
+  xhr.onload = function () {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      callback(xhr.response);
+    } else {
+      throw new Error(xhr.statusText);
+    }
+  };
+  xhr.send();
 }
-https://xxholic.github.io/webgl-wind/
